@@ -143,6 +143,18 @@ namespace OpenMined.Syft.Tensor
                     {
                         factory.Get(creators[0]).Backward(grad, this);
                     }
+                    else if (creation_op == "crossentropyloss")
+                    {
+	                    FloatTensor localpred = factory.Get(creators[0]).emptyTensorCopy();
+	                    localpred.Data = factory.Get(creators[0]).Data;
+	                    localpred.autograd = false;
+	                    FloatTensor localtarget = factory.Get(creators[1]).emptyTensorCopy();
+	                    localtarget.Data = factory.Get(creators[1]).Data;
+	                    localtarget.autograd = false;
+	                    //FloatTensor prediction = (factory.Get (creators [0]).Copy (autograd: false));
+	                    //factory.Get(creators[0]).Backward( ((factory.Get(creators[1])).Sub(localpred)).Sum() , this);
+	                    factory.Get(creators[0]).Backward( (localtarget.Sub(localpred)).Sum() , this);
+                    }
                     else if (creation_op == "div_elem")
                     {
                         FloatTensor x = factory.Get(creators[0]);
